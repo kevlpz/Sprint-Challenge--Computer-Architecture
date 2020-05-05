@@ -59,61 +59,61 @@ class CPU:
         return value
 
     def handle_ldi(self, operand_a, operand_b):
-        print('ldi')
+        # print('ldi')
         self.reg[operand_a] = operand_b
         self.pc += 3
         
     def handle_prn(self, operand_a, operand_b):
-        print('prn')
+        # print('prn')
         print(self.reg[operand_a])
         self.pc += 2
 
     def handle_hlt(self, operand_a, operand_b):
-        print('hlt')
+        # print('hlt')
         self.running = False
 
     def handle_mul(self, operand_a, operand_b):
-        print('mul')
+        # print('mul')
         self.alu('mul', operand_a, operand_b)
         self.pc += 3
 
     def handle_add(self, operand_a, operand_b):
-        print('add')
+        # print('add')
         self.alu('add', operand_a, operand_b)
         self.pc += 3
 
     def handle_push(self, operand_a, operand_b):
-        print('push')
+        # print('push')
         self.push(self.reg[operand_a])
         self.pc += 2
 
     def handle_pop(self, operand_a, operand_b):
-        print('pop')
+        # print('pop')
         self.reg[operand_a] = self.pop()
         self.pc += 2
 
     def handle_call(self, operand_a, operand_b):
-        print('call')
+        # print('call')
         self.reg[sp] -= 1
         self.ram[self.reg[sp]] = self.pc + 2
         self.ram_write(self.reg[sp], self.pc + 2)
 
     def handle_ret(self, operand_a, operand_b):
-        print('ret')
+        # print('ret')
         self.pc = self.ram_read(self.reg[sp])
         self.reg[sp] += 1
 
     def handle_cmp(self, operand_a, operand_b):
-        print('cmp')
+        # print('cmp')
         self.alu('cmp', operand_a, operand_b)
         self.pc += 3
 
     def handle_jmp(self, operand_a, operand_b):
-        print('jmp')
+        # print('jmp')
         self.pc = self.reg[operand_a]
 
     def handle_jeq(self, operand_a, operand_b):
-        print('jeq')
+        # print('jeq')
         if self.flag & et:
             self.pc = self.reg[operand_a] + 2
             # self.handle_jmp(self.reg[operand_a], None)
@@ -121,13 +121,13 @@ class CPU:
             self.pc += 2
 
     def handle_jne(self, operand_a, operand_b):
-        print('jne')
+        # print('jne')
         if not self.flag & et:
-            print(f'jne operand_a: {operand_a}')
-            print(f'jne reg[2]: {self.reg[2]}')
+            # print(f'jne operand_a: {operand_a}')
+            # print(f'jne reg[2]: {self.reg[2]}')
             self.pc = self.reg[operand_a] - 1
             # self.handle_jmp(self.reg[operand_a], None)
-            print(f'jne pc: {self.pc}')
+            # print(f'jne pc: {self.pc}')
         else:
             self.pc += 2
             print('jne else')
@@ -192,15 +192,14 @@ class CPU:
         """Run the CPU."""
         print('running...')
         while self.running:
-            print(f'pc: {self.pc}')
+            # print(f'pc: {self.pc}')
             self.ir = self.ram_read(self.pc)
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
-            print(f'self.ir: {bin(self.ir)}')
+            # print(f'self.ir: {bin(self.ir)}')
             if self.ir in self.branch_table:
                 # print(f'self.ir: {self.ir}')
                 # print(self.branch_table[self.ir])
                 self.branch_table[self.ir](operand_a, operand_b)
             else:
-                print('error')
                 self.running = False
